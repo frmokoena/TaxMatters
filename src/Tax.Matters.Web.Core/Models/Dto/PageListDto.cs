@@ -1,10 +1,9 @@
 ﻿namespace Tax.Matters.Web.Core.Models.Dto;
 
-public class PageListDto<T>
+public class PageListDto<T> : List<T>
 {
-    public IEnumerable<T> Items { get; } = default!;
-    public int PageIndex { get; }
-    public int TotalPages { get; }
-    public int TotalCount { get; }
-    public int Limit { get; }
+    public bool HasPreviousPage { get; set; }
+    public bool HasNextPage { get; set; }
+    public int PageIndex { get; set; }
+    public int TotalPages { get; set; }
 }

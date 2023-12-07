@@ -1,50 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Tax.Matters.API.Core.Wrappers
+namespace Tax.Matters.API.Core.Wrappers;
+
+public class PageList<T> : List<T>
 {
-    public class PageList<T>
+    public PageList(IEnumerable<T> items, int count, int pageIndex, int pageSize = 20)
     {
-        public IEnumerable<T> Items { get; }
-        public int PageIndex { get; }
-        public int TotalPages { get; }
-        public int TotalCount { get; }
-        public int Limit { get; }
+        PageIndex = pageIndex;
+        TotalPages = (int)Math.Ceiling(count / (double)pageSize);
 
-        public PageList(
-            List<T> items,
-            int count,
-            int pageIndex,
-            int limit)
-        {
-            PageIndex = pageIndex;
-            Limit = limit;
-            TotalPages = (int)Math.Ceiling(count / (double)limit);
-            TotalCount = count;
-            Items = items;
-        }
+        AddRange(items);
+    }
 
-        public bool HasPreviousPage => PageIndex > 1;
+    public bool HasPreviousPage => PageIndex > 1;
+    public bool HasNextPage => PageIndex < TotalPages;
+    public int PageIndex { get; private set; }
+    public int TotalPages { get; private set; }
 
-        public bool HasNextPage => PageIndex < TotalPages;
-
-        public static async Task<PageList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
-        {
-            var count = await source.CountAsync();
-
-            var query = source.Skip((pageIndex - 1) * pageSize).Take(pageSize);
-
-
-            var items = await query.ToListAsync();
-
-            return new PageList<T>(items, count, pageIndex, pageSize);
-        }
-
-        public static async Task<PageList<T>> CreateAsync(IEnumerable<T> source, int pageIndex, int pageSize)
-        {
-            var count = source.Count();
-            var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-
-            return await Task.FromResult(new PageList<T>(items, count, pageIndex, pageSize));
-        }
+    public static async Task<PageList<T>> CreateAsync(
+        IQueryable<T> source, int pageIndex, int pageSize = 20)
+    {
+        var count = await source.CountAsync();
+        var items = await source.Skip(
+            (pageIndex - 1) * pageSize)
+            .Take(pageSize).ToListAsync();
+        return new PageList<T>(items, count, pageIndex, pageSize);
     }
 }

@@ -1,6 +1,5 @@
 ﻿@page
-@model Tax.Matters.Web.Pages.TaxCalculatorModel
-
+@model Tax.Matters.Web.Pages.TaxCalculations.TaxCalculatorModel
 @{
     ViewData["Title"] = "Tax Calculator";
 }
@@ -17,21 +16,21 @@
             <div class="form-group mb-3">
                 <label asp-for="Input.AnnualIncome" class="control-label fs-6"></label>
                 <input asp-for="Input.AnnualIncome" class="form-control" />
-                    <span asp-validation-for="Input.AnnualIncome" class="text-danger"></span>
-                
+                <span asp-validation-for="Input.AnnualIncome" class="text-danger"></span>
+
             </div>
             <div class="form-group mb-3">
                 <label asp-for="Input.PostalCode" class="control-label fs-6"></label>
-                 <input asp-for="Input.PostalCode" class="form-control" />
-                    <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
-            </div>            
+                <input asp-for="Input.PostalCode" class="form-control" />
+                <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
+            </div>
             <button type="submit" class="btn btn-primary">Calculate</button>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a asp-page="/TaxCalculations/Index">Back to List</a>
 </div>
 
 @section Scripts {
