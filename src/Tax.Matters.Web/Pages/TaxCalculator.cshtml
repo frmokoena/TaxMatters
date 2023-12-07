@@ -1,0 +1,41 @@
+﻿@page
+@model Tax.Matters.Web.Pages.TaxCalculatorModel
+
+@{
+    ViewData["Title"] = "Tax Calculator";
+}
+<h1>@ViewData["Title"]</h1>
+
+<h4>Calculate your tax payment</h4>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="Input.AnnualIncome" class="control-label fs-6"></label>
+                <input asp-for="Input.AnnualIncome" class="form-control" />
+                    <span asp-validation-for="Input.AnnualIncome" class="text-danger"></span>
+                
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Input.PostalCode" class="control-label fs-6"></label>
+                 <input asp-for="Input.PostalCode" class="form-control" />
+                    <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
+            </div>            
+            <button type="submit" class="btn btn-primary">Calculate</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
