@@ -4,13 +4,16 @@ namespace Tax.Matters.Domain.Entities;
 
 public class TaxCalculation : Auditable
 {
-    [Display(Name = "Postal Code")]
-    public string PostalCodeId { get; set; } = default!;
-    public PostalCode PostalCode { get; set; } = default!;
-
     [Display(Name = "Annual Income")]
+    [DisplayFormat(DataFormatString = "{0:### ### ###}")]
     public decimal AnnualIncome { get; set; }
 
     [Display(Name = "Tax Amount")]
-    public decimal TaxAmount { get; set;}
+    [DisplayFormat(DataFormatString = "{0:### ### ###.#0}")]
+    public decimal TaxAmount { get; set; }
+    
+    public string PostalCodeId { get; set; } = default!;
+
+    [Display(Name = "Postal Code")]
+    public PostalCode PostalCode { get; set; } = default!;
 }

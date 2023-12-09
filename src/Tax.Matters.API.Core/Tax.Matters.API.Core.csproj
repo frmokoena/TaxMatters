@@ -10,10 +10,10 @@
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="MediatR" Version="12.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Tax.Matters.Client\Tax.Matters.Client.csproj" />
 	  <ProjectReference Include="..\Tax.Matters.Infrastructure\Tax.Matters.Infrastructure.csproj" />
 	</ItemGroup>
 

@@ -14,15 +14,15 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group mb-3">
-                <label asp-for="Input.AnnualIncome" class="control-label fs-6"></label>
-                <input asp-for="Input.AnnualIncome" class="form-control" />
-                <span asp-validation-for="Input.AnnualIncome" class="text-danger"></span>
+                <label asp-for="Calculation.AnnualIncome" class="control-label fs-6"></label>
+                <input asp-for="Calculation.AnnualIncome" class="form-control" />
+                <span asp-validation-for="Calculation.AnnualIncome" class="text-danger"></span>
 
             </div>
             <div class="form-group mb-3">
-                <label asp-for="Input.PostalCode" class="control-label fs-6"></label>
-                <input asp-for="Input.PostalCode" class="form-control" />
-                <span asp-validation-for="Input.PostalCode" class="text-danger"></span>
+                <label asp-for="Calculation.PostalCode" class="control-label fs-6"></label>
+                <input asp-for="Calculation.PostalCode" class="form-control" />
+                <span asp-validation-for="Calculation.PostalCode" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Calculate</button>
         </form>

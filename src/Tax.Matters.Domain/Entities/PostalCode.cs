@@ -1,6 +1,13 @@
-﻿namespace Tax.Matters.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Tax.Matters.Domain.Entities;
 
 public class PostalCode : Base
 {
+    [Display(Name = "Code")]
     public string Code { get; set; } = default!;
+    public string IncomeTaxId { get; set; } = default!;
+
+    [Display(Name = "Tax Calculation Type")]
+    public IncomeTax IncomeTax { get; set; } = default!;
 }

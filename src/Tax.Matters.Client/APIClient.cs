@@ -12,8 +12,8 @@ public class APIClient(
     IOptions<ClientOptions> optionsAccessor) : APIBaseClient(httpClient, httpContext, optionsAccessor), IAPIClient
 {
     public async Task<IResponse<T>> CreateAsync<T, TContent>(
+        TContent content,
         string uri,
-        TContent content,      
         string? baseUri = null,
         string? clientName = null,
         string? apiKey = null,           
@@ -55,7 +55,7 @@ public class APIClient(
             uri = baseUri + "/" + uri;
         }
 
-        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
 
         var response = await SendRequestAsync<T>(
             httpRequestMessage,

@@ -11,5 +11,9 @@ public class PostalCodeEntityTypeConfiguration : IEntityTypeConfiguration<Postal
         builder
             .Property(m => m.Code)
             .HasMaxLength(256);
+
+        builder
+            .HasIndex(m => m.Code)
+            .IsUnique();
     }
 }

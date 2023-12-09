@@ -1,0 +1,67 @@
+﻿@page
+@model Tax.Matters.Web.Pages.PostalCodes.IndexModel
+@{
+    ViewData["Title"] = "Postal Codes";
+}
+
+<h2>Postal Codes</h2>
+
+@*
+<p>
+    <a asp-page="Create">Create New</a>
+</p>*@
+
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by postal code:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PostalCodes.Items[0].Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostalCodes.Items[0].IncomeTax)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PostalCodes.Items)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IncomeTax.TypeName)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.PostalCodes.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.PostalCodes.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.PostalCodes.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.PostalCodes.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

@@ -1,47 +1,55 @@
 ﻿@page
 @model Tax.Matters.Web.Pages.TaxCalculations.IndexModel
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tax Calculations";
 }
 
-<h1>Index</h1>
+<h2>Tax Calculations</h2>
 
 <p>
     <a asp-page="TaxCalculator">Calculate New</a>
 </p>
 
-<form>
-    <p>
-        Postal Code: <input type="text" asp-for="SearchString" />
-        <input type="submit" value="Search" />
-    </p>
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by postal code:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index">Back to full List</a>
+        </p>
+    </div>
 </form>
 
 <table class="table">
-
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Calculations[0].AnnualIncome)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.IncomeSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.Calculations.Items[0].AnnualIncome)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Calculations[0].TaxAmount)
+                @Html.DisplayNameFor(model => model.Calculations.Items[0].TaxAmount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Calculations[0].PostalCodeId)
+                @Html.DisplayNameFor(model => model.Calculations.Items[0].PostalCode.IncomeTax)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Calculations[0].PostalCodeId)
+                @Html.DisplayNameFor(model => model.Calculations.Items[0].PostalCode)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Calculations[0].DateCreated)
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
+                    @Html.DisplayNameFor(model => model.Calculations.Items[0].DateUpdated)
+                </a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Calculations)
+        @foreach (var item in Model.Calculations.Items)
         {
             <tr>
                 <td>
@@ -51,19 +59,38 @@
                     @Html.DisplayFor(modelItem => item.TaxAmount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PostalCode)
+                    @Html.DisplayFor(modelItem => item.PostalCode.IncomeTax.TypeName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PostalCode)
+                    @Html.DisplayFor(modelItem => item.PostalCode.Code)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DateUpdated)
                 </td>
                 <td>
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.Calculations.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Calculations.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Calculations.PageIndex - 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+   asp-route-sortOrder="@Model.CurrentSort"
+   asp-route-pageIndex="@(Model.Calculations.PageIndex + 1)"
+   asp-route-currentFilter="@Model.CurrentFilter"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

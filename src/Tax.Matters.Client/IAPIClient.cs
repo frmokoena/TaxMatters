@@ -3,8 +3,8 @@
 public interface IAPIClient
 {
     Task<IResponse<T>> CreateAsync<T, TContent>(
-        string uri,
         TContent content,
+        string uri,
         string? BaseUri = null,
         string? clientName = null,
         string? apiKey = null,            

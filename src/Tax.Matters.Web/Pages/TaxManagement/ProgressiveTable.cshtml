@@ -1,0 +1,62 @@
+﻿@page
+@model Tax.Matters.Web.Pages.TaxManagement.ProgressiveTableModel
+
+@{
+    ViewData["Title"] = "Progressive Table";
+}
+
+<h2>Progressive Table</h2>
+
+<p>
+    <a asp-page="Index">Back to List</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Taxes.Items[0].Rate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Taxes.Items[0].MinimumIncome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Taxes.Items[0].MaximumIncome)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Taxes.Items)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MinimumIncome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaximumIncome)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Taxes.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Taxes.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./ProgressiveTable"
+   asp-route-id="@Model.Id"
+   asp-route-pageIndex="@(Model.Taxes.PageIndex - 1)"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./ProgressiveTable"
+   asp-route-id="@Model.Id"
+   asp-route-pageIndex="@(Model.Taxes.PageIndex + 1)"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

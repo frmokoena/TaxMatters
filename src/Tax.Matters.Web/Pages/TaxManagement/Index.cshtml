@@ -1,4 +1,77 @@
 ﻿@page
 @model Tax.Matters.Web.Pages.TaxManagement.IndexModel
+
 @{
+    ViewData["Title"] = "Tax Calculation Types";
 }
+
+<h2>Tax Calculation Types</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Taxes.Items[0].TypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Taxes.Items[0].FlatRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Taxes.Items[0].FlatValue!.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Taxes.Items[0].FlatValue!.Threshold)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Taxes.Items[0].FlatValue!.ThresholdRate)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Taxes.Items)
+        {
+            <tr>
+                <td>                   
+                    @if(item.TypeName == Domain.Enums.TaxCalculationType.Progressive)
+                    {
+                        <a asp-page="./ProgressiveTable" asp-route-id="@item.Id">
+                            @Html.DisplayFor(modelItem => item.TypeName)
+                        </a>                       
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.TypeName)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlatRate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlatValue!.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlatValue!.Threshold)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlatValue!.ThresholdRate)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Taxes.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Taxes.HasNextPage ? "disabled" : "";
+}
+
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.Taxes.PageIndex - 1)"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-page="./Index"
+   asp-route-pageIndex="@(Model.Taxes.PageIndex + 1)"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

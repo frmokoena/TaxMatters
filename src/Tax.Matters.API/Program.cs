@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Tax.Matters.API.Core;
 using Tax.Matters.API.Core.Security;
 using Tax.Matters.Infrastructure;
+using Tax.Matters.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyP
 builder.Services.AddSingleton<IAuthorizationHandler, AuthorizationHandlerAPICore>();
 builder.Services.AddBasicHeaderAuthentication();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAPICoreServices();
 builder.Services.AddDomainDbContext(
     builder.Configuration, connectionStringName: "AppDbContext");
@@ -33,5 +35,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// For seeding test data
+// Can be safely removed
+await ContextDataSeeding.SeedContextDataAsync(app);
 
 app.Run();
