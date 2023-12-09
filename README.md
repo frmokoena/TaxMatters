@@ -136,6 +136,8 @@ This provides services for integration. The web project uses the services to int
 
 This houses the domain entities and models.
 
+There is also an `Audit Log` model that gets populated with logs of the actions on domain models, i.e Add, Modify, Delete actions.
+
 ## The Infrastructure Project
 
 This houses the infrastructure for the data access.

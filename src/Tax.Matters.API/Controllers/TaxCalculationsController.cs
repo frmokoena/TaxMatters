@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tax.Matters.API.Core.Modules.TaxCalculations.Commands;
 using Tax.Matters.API.Core.Modules.TaxCalculations.Models;
 using Tax.Matters.API.Core.Modules.TaxCalculations.Queries;
+using Tax.Matters.Client;
 
 namespace Tax.Matters.API.Controllers
 {
@@ -15,7 +16,7 @@ namespace Tax.Matters.API.Controllers
         private readonly IMediator _mediator = mediator;
 
         [HttpGet]
-        public async Task<IActionResult> List(
+        public async Task<IActionResult> ListCalculations(
             int pageNumber = 1,
             int limit = 20,
             string? keyword = null,
@@ -38,15 +39,28 @@ namespace Tax.Matters.API.Controllers
                 return Ok(response.Content);
             }
 
-            if (!string.IsNullOrWhiteSpace(response.HttpReasonPhrase))
+            if (response.ResponseError == ResponseError.Http)
             {
-                return StatusCode((int)response.HttpStatusCode, new
+                if (!string.IsNullOrWhiteSpace(response.Raw))
                 {
-                    error = response.HttpReasonPhrase
-                });
+                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                }
+                else if (!string.IsNullOrWhiteSpace(response.Error))
+                {
+                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                }
+                else
+                {
+                    return StatusCode((int)response.HttpStatusCode);
+                }
             }
 
-            return StatusCode((int)response.HttpStatusCode);
+            if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode(500, response.Error);
+            }
+
+            return StatusCode(500, "unexpected response received while executing the request");
         }
 
         [HttpGet("{id}")]
@@ -61,15 +75,28 @@ namespace Tax.Matters.API.Controllers
                 return Ok(response.Content);
             }
 
-            if (!string.IsNullOrWhiteSpace(response.HttpReasonPhrase))
+            if (response.ResponseError == ResponseError.Http)
             {
-                return StatusCode((int)response.HttpStatusCode, new
+                if (!string.IsNullOrWhiteSpace(response.Raw))
                 {
-                    error = response.HttpReasonPhrase
-                });
+                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                }
+                else if (!string.IsNullOrWhiteSpace(response.Error))
+                {
+                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                }
+                else
+                {
+                    return StatusCode((int)response.HttpStatusCode);
+                }
             }
 
-            return StatusCode((int)response.HttpStatusCode);
+            if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode(500, response.Error);
+            }
+
+            return StatusCode(500, "unexpected response received while executing the request");
         }
 
         [HttpDelete("{id}")]
@@ -84,15 +111,28 @@ namespace Tax.Matters.API.Controllers
                 return Ok(response.Content);
             }
 
-            if (!string.IsNullOrWhiteSpace(response.HttpReasonPhrase))
+            if (response.ResponseError == ResponseError.Http)
             {
-                return StatusCode((int)response.HttpStatusCode, new
+                if (!string.IsNullOrWhiteSpace(response.Raw))
                 {
-                    error = response.HttpReasonPhrase
-                });
+                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                }
+                else if (!string.IsNullOrWhiteSpace(response.Error))
+                {
+                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                }
+                else
+                {
+                    return StatusCode((int)response.HttpStatusCode);
+                }
             }
 
-            return StatusCode((int)response.HttpStatusCode);
+            if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode(500, response.Error);
+            }
+
+            return StatusCode(500, "unexpected response received while executing the request");
         }
 
         [HttpPost("calculate")]
@@ -107,15 +147,28 @@ namespace Tax.Matters.API.Controllers
                 return Ok(response.Content);
             }
 
-            if (!string.IsNullOrWhiteSpace(response.HttpReasonPhrase))
+            if (response.ResponseError == ResponseError.Http)
             {
-                return StatusCode((int)response.HttpStatusCode, new
+                if (!string.IsNullOrWhiteSpace(response.Raw))
                 {
-                    error = response.HttpReasonPhrase
-                });
+                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                }
+                else if (!string.IsNullOrWhiteSpace(response.Error))
+                {
+                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                }
+                else
+                {
+                    return StatusCode((int)response.HttpStatusCode);
+                }
             }
 
-            return StatusCode((int)response.HttpStatusCode);
+            if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode(500, response.Error);
+            }
+
+            return StatusCode(500, "unexpected response received while executing the request");
         }
     }
 }

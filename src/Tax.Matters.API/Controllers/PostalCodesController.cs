@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tax.Matters.API.Core.Modules.PostalCodes.Models;
 using Tax.Matters.API.Core.Modules.PostalCodes.Queries;
+using Tax.Matters.Client;
 
 namespace Tax.Matters.API.Controllers;
 
@@ -35,14 +36,27 @@ public class PostalCodesController(IMediator mediator) : ControllerBase
             return Ok(response.Content);
         }
 
-        if (!string.IsNullOrWhiteSpace(response.HttpReasonPhrase))
+        if (response.ResponseError == ResponseError.Http)
         {
-            return StatusCode((int)response.HttpStatusCode, new
+            if(!string.IsNullOrWhiteSpace(response.Raw))
             {
-                error = response.HttpReasonPhrase
-            });
+                return StatusCode((int)response.HttpStatusCode, response.Raw);
+            }
+            else if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Raw);
+            }
+            else
+            {
+                return StatusCode((int)response.HttpStatusCode);
+            }
         }
 
-        return StatusCode((int)response.HttpStatusCode);
+        if (!string.IsNullOrWhiteSpace(response.Error))
+        {
+            return StatusCode(500, response.Error);
+        }
+
+        return StatusCode(500, "unexpected response received while executing the request");
     }
 }
