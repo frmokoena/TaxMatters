@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tax.Matters.API.Core.Modules.TaxManagement.Models;
 using Tax.Matters.API.Core.Modules.TaxManagement.Queries;
@@ -6,6 +7,7 @@ using Tax.Matters.API.Core.Modules.TaxManagement.Queries;
 namespace Tax.Matters.API.Controllers;
 
 [ApiController]
+[Authorize(Policy = "Web")]
 [Route("services/[controller]")]
 public class TaxManagementController(IMediator mediator) : ControllerBase
 {
