@@ -7,6 +7,11 @@ using Tax.Matters.Web.Core.Modules.TaxManagement.Queries;
 
 namespace Tax.Matters.Web.Core.Modules.TaxManagement.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="GetTaxCalculationTypesQueryHandler"/> handler class
+/// </summary>
+/// <param name="client"></param>
+/// <param name="optionsAccessor"></param>
 public class GetTaxCalculationTypesQueryHandler(IAPIClient client, IOptions<ClientOptions> optionsAccessor) : IRequestHandler<GetTaxCalculationTypesQuery, IResponse<PageListDto<IncomeTax>>>
 {
     private readonly IAPIClient _client = client;

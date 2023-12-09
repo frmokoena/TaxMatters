@@ -1,5 +1,8 @@
 ﻿namespace Tax.Matters.API.Core.Modules.TaxCalculations.Models;
 
+/// <summary>
+/// Class <c>TaxCalculationsFiltering</c> models the filtering of the tax calculations list query
+/// </summary>
 public class TaxCalculationsFilteringModel
 {
     public int Limit { get; set; }

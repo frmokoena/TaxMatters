@@ -54,10 +54,9 @@ public class TaxCalculationsControllerTest
 
         // Act
         var result = await controller.ListCalculations();
-
+        ObjectResult? objectResult = result as ObjectResult;
 
         // Assert       
-        ObjectResult? objectResult = result as ObjectResult;
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.TypeOf<ObjectResult>());
@@ -107,9 +106,9 @@ public class TaxCalculationsControllerTest
 
         // Act
         var result = await controller.ListCalculations();
+        ObjectResult? objectResult = result as ObjectResult;
 
         // Assert       
-        ObjectResult? objectResult = result as ObjectResult;
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.TypeOf<ObjectResult>());

@@ -8,6 +8,10 @@ using Tax.Matters.Infrastructure.Data;
 
 namespace Tax.Matters.API.Core.Modules.TaxManagement.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="GetProgressiveTableQueryHandler"/> handler class
+/// </summary>
+/// <param name="context"></param>
 public class GetProgressiveTableQueryHandler(AppDbContext context) : IRequestHandler<GetProgressiveTableQuery, IResponse<PageList<ProgressiveIncomeTax>>>
 {
     private readonly AppDbContext _context = context;

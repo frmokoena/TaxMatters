@@ -12,6 +12,11 @@ using Tax.Matters.Web.Core.Modules.TaxManagement.Queries;
 
 namespace Tax.Matters.Web.Core.Modules.TaxManagement.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="GetProgressiveTableQueryHandler"/> handler class
+/// </summary>
+/// <param name="client"></param>
+/// <param name="optionsAccessor"></param>
 public class GetProgressiveTableQueryHandler(IAPIClient client, IOptions<ClientOptions> optionsAccessor) : IRequestHandler<GetProgressiveTableQuery, IResponse<PageListDto<ProgressiveIncomeTax>>>
 {
     private readonly IAPIClient _client = client;

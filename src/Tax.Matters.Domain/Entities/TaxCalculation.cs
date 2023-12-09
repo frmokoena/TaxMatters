@@ -2,6 +2,9 @@
 
 namespace Tax.Matters.Domain.Entities;
 
+/// <summary>
+/// Models the tax calculation result
+/// </summary>
 public class TaxCalculation : Auditable
 {
     [Display(Name = "Annual Income")]

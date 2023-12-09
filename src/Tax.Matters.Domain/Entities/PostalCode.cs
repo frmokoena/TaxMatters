@@ -2,6 +2,9 @@
 
 namespace Tax.Matters.Domain.Entities;
 
+/// <summary>
+/// Postal Code enitity
+/// </summary>
 public class PostalCode : Base
 {
     [Display(Name = "Code")]

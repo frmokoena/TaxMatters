@@ -8,6 +8,10 @@ using Tax.Matters.Infrastructure.Data;
 
 namespace Tax.Matters.API.Core.Modules.TaxCalculations.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="DeleteTaxCalculationCommandHandler"/> handler class
+/// </summary>
+/// <param name="context"></param>
 public class DeleteTaxCalculationCommandHandler(AppDbContext context) : IRequestHandler<DeleteTaxCalculationCommand, IResponse<TaxCalculation>>
 {
     private readonly AppDbContext _context = context;

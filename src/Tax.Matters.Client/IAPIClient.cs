@@ -1,5 +1,8 @@
 ﻿namespace Tax.Matters.Client;
 
+/// <summary>
+/// Defines the common actions for the client
+/// </summary>
 public interface IAPIClient
 {
     Task<IResponse<T>> CreateAsync<T, TContent>(

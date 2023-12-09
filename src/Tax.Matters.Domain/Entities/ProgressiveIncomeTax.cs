@@ -2,6 +2,9 @@
 
 namespace Tax.Matters.Domain.Entities;
 
+/// <summary>
+/// Table for the progressive tax type
+/// </summary>
 public class ProgressiveIncomeTax : Auditable
 {
     [Display(Name = "From")]

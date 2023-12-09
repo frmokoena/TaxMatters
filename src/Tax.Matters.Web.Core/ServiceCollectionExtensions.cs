@@ -2,6 +2,9 @@
 
 namespace Tax.Matters.Web.Core
 {
+    /// <summary>
+    /// Inject web core services
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddWebCoreServices(this IServiceCollection services)

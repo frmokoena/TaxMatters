@@ -6,6 +6,12 @@ using Tax.Matters.Client.Extensions;
 
 namespace Tax.Matters.Client;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="APIClient"/> class
+/// </summary>
+/// <param name="httpClient"></param>
+/// <param name="httpContext"></param>
+/// <param name="optionsAccessor"></param>
 public class APIClient(
     HttpClient httpClient,
     IHttpContextAccessor httpContext,

@@ -6,6 +6,11 @@ using Tax.Matters.Web.Core.Modules.TaxCalculations.Commands;
 
 namespace Tax.Matters.Web.Core.Modules.TaxCalculations.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="DeleteTaxCalculationCommandHandler"/> handler class
+/// </summary>
+/// <param name="client"></param>
+/// <param name="optionsAccessor"></param>
 public class DeleteTaxCalculationCommandHandler(IAPIClient client, IOptions<ClientOptions> optionsAccessor) : IRequestHandler<DeleteTaxCalculationCommand, IResponse<TaxCalculation>>
 {
     private readonly IAPIClient _client = client;

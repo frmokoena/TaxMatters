@@ -13,6 +13,11 @@ using Tax.Matters.Web.Core.Modules.TaxCalculations.Queries;
 
 namespace Tax.Matters.Web.Core.Modules.PostalCodes.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="GetPostalCodesQueryHandler"/> handler class
+/// </summary>
+/// <param name="client"></param>
+/// <param name="optionsAccessor"></param>
 public class GetPostalCodesQueryHandler(IAPIClient client, IOptions<ClientOptions> optionsAccessor) : IRequestHandler<GetPostalCodesQuery, IResponse<PageListDto<PostalCode>>>
 {
     private readonly IAPIClient _client = client;

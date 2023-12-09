@@ -16,6 +16,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAPICoreServices();
 builder.Services.AddDomainDbContext(
     builder.Configuration, connectionStringName: "AppDbContext");
+builder.Services.AddCalculationRepository();
 
 builder.Services.AddControllers();
 

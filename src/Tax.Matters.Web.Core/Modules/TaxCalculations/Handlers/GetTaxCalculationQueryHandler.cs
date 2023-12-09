@@ -6,6 +6,11 @@ using Tax.Matters.Web.Core.Modules.TaxCalculations.Queries;
 
 namespace Tax.Matters.Web.Core.Modules.TaxCalculations.Handlers;
 
+/// <summary>
+/// Initializes a new instace of the <see cref="GetTaxCalculationQueryHandler"/> handler class
+/// </summary>
+/// <param name="client"></param>
+/// <param name="optionsAccessor"></param>
 public class GetTaxCalculationQueryHandler(IAPIClient client, IOptions<ClientOptions> optionsAccessor) : IRequestHandler<GetTaxCalculationQuery, IResponse<TaxCalculation>>
 {
     private readonly IAPIClient _client = client;

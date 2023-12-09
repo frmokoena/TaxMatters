@@ -2,6 +2,9 @@
 
 namespace Tax.Matters.Domain.Entities;
 
+/// <summary>
+/// Models the flat value tax calculation type
+/// </summary>
 public class FlatValueIncomeTax : Auditable
 {
     [Display(Name = "Annual Tax")]

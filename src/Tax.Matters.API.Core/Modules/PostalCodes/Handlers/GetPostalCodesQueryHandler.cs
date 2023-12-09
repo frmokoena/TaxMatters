@@ -11,6 +11,10 @@ using Tax.Matters.Infrastructure.Data;
 
 namespace Tax.Matters.API.Core.Modules.PostalCodes.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="GetPostalCodesQueryHandler"/> handler class
+/// </summary>
+/// <param name="context"></param>
 public class GetPostalCodesQueryHandler(AppDbContext context) : IRequestHandler<GetPostalCodesQuery, IResponse<PageList<PostalCode>>>
 {
     private readonly AppDbContext _context = context;

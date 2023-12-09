@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id}"
 @model Tax.Matters.Web.Pages.TaxManagement.ProgressiveTableModel
 
 @{
@@ -36,7 +36,14 @@
                     @Html.DisplayFor(modelItem => item.MinimumIncome)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MaximumIncome)
+                    @if(item.MaximumIncome != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.MaximumIncome)
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
                 </td>
             </tr>
         }

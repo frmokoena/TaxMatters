@@ -24,9 +24,9 @@ This application is written in C#/.NET 8.0. It follows a clean architecture. The
   - [The Web Application](#the-web-application-taxmattersweb)  
   - [The Core Web Application](#the-core-web-application-taxmatterswebcore)
   - [The Test Projects](#the-test-projects)
+  - [Concurrency Conflicts](#concurrency-conflicts)
+  - [Audit Trail](#audit-trail)
 - [Patterns Used](#patterns-used)
-  - [Domain Events](#domain-events)
-  - [Related Projects](#related-projects)
 
 # Usage
 
@@ -39,7 +39,12 @@ The solution contains the release assets in the file `assets.zip`. The assets ca
 
 To build and run the project, open a command prompt to the root of the solution, and perform the following: 
 
-1. Publish the API project to a folder:
+1. Run tests
+
+       dotnet test
+
+
+2. Publish the API project to a folder:
 
     ```
     cd ./src/Tax.Matters.API
@@ -47,7 +52,7 @@ To build and run the project, open a command prompt to the root of the solution,
     cd ..
     ```
 
-2. Publish the Web project to a folder:
+3. Publish the Web project to a folder:
 
     ```
     cd ./src/Tax.Matters.Web 
@@ -57,14 +62,14 @@ To build and run the project, open a command prompt to the root of the solution,
 
 1. To run the application, open a command prompt (each for api and the web, respectively) to the `assets` folder created from the previous step (should be at the root of the solution), or extracted from the `assets.zip`, and run the executable:
 
-   - API Command Prompt:
+   - From the API Command Prompt:
 
         ```
         cd ./api/
         dotnet Tax.Matters.API.dll --urls "https://localhost:5443"        
         ```
 
-   - Web Command Prompt:
+   - From the Web app Command Prompt:
 
         ```
         cd ./web
@@ -83,13 +88,13 @@ To build and run the project, open a command prompt to the root of the solution,
 
 ## The API Application (`Tax.Matters.API`)
 
-This is the Api project. It provides the Api endpoints for the clients. The Api is protected by an Api key to prevent unauthorised use. This can easily be changed to `Oauth` as it is a pluggable middleware.
+This is the Api project. It provides the Api endpoints for the clients. The Api is protected by an Api key to prevent unauthorized use. This can easily be changed to `Oauth` as it is a pluggable middleware.
 
 ### The API Security
 
 Authorized access is required for all the endpoints.
 
-To deter unaouthorized access, all unauthorized accesses receive the following response (This can be changed to anything else, including the `401` response):
+To deter unauthorized access, all unauthorized accesses receive the following response (This can be changed to anything else, including the `401` response):
 
     {
         "title": "Not Found",
@@ -130,13 +135,11 @@ This project harbours the business logic of the api. Our controllers are thin. T
 
 ## The Client Project (`Tax.Matters.Client`)
 
-This provides services for integration. The web project uses the services to integrate with the api. The api can also reuse the services to integrate with 3rd party services.
+Services for integration are provided here. The web project uses the services for integration with the API. The services are client-independent. The API can also reuse the services for integration with third-party services. _**The DRY principle**_ - Maintain in one place and deploy everywhere.
 
 ## The Domain Project (Tax.Matters.Domain)
 
 This houses the domain entities and models.
-
-There is also an `Audit Log` model that gets populated with logs of the actions on domain models, i.e Add, Modify, Delete actions.
 
 ## The Infrastructure Project
 
@@ -152,12 +155,22 @@ Just like the core api project, this project harbours the business logic of the 
 
 ## The Test Projects
 
-Each project has corresponding test project
+Each project has corresponding test project with the calculate command receiving the most coverage.
+
+## Concurrency Conflicts
+
+The system implements optimistic concurrency via concurrency token, `Version`. i.e. The data modification fail on save if the data has changed since it was queried.
+
+## Audit Trail
+
+There system provides full `Audit Trail` in `AuditLog` entity that logs all the actions that modify entity state (i.e Add, Modify, Delete) on the `auditable` entities.
 
 # Patterns Used
 
-The project follows the CQRS (Command and Query Responsibility Segregation) and mediator patterns.
+The project follows the CQRS (Command and Query Responsibility Segregation), mediator and repository patterns.
 
-_**CQRS pattern**_: Segregate the operations that handle write requests (commands) from operations that handle read requests (queries). 
+_**CQRS pattern**_: Segregates the operations that handle write requests (commands) from operations that handle read requests (queries). 
 
-_**Mediator pattern**_:  Ensures that components are loosely coupled by keeping objects from referring to each other explicitly.
+_**Mediator pattern**_:  Ensures that components are loosely coupled by preventing objects from explicitly referencing each other.
+
+_**Repository pattern**_: Domain-driven design pattern used to keep persistence concerns outside the domain model of the system.

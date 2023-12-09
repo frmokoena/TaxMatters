@@ -7,6 +7,11 @@ using Tax.Matters.Domain.Entities;
 
 namespace Tax.Matters.Infrastructure.Data;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="AppDbContext"/> context
+/// </summary>
+/// <param name="options"></param>
+/// <param name="httpContext"></param>
 public class AppDbContext(
     DbContextOptions<AppDbContext> options,
     IHttpContextAccessor httpContext) : DbContext(options)
