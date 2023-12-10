@@ -1,10 +1,5 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Tax.Matters.API.Core.Modules.PostalCodes.Commands;
 using Tax.Matters.Client;
 using Tax.Matters.Domain.Entities;

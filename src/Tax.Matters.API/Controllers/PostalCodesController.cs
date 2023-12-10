@@ -39,7 +39,7 @@ public class PostalCodesController(IMediator mediator) : ControllerBase
 
         if (response.ResponseError == ResponseError.Http)
         {
-            if(!string.IsNullOrWhiteSpace(response.Raw))
+            if (!string.IsNullOrWhiteSpace(response.Raw))
             {
                 return StatusCode((int)response.HttpStatusCode, response.Raw);
             }
@@ -62,9 +62,81 @@ public class PostalCodesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Calculate([FromBody] CreatePostalCodeRequestModel model)
+    public async Task<IActionResult> Create([FromBody] CreatePostalCodeRequestModel model)
     {
         var command = new CreatePostalCodeCommand(model);
+
+        var response = await _mediator.Send(command);
+
+        if (!response.IsError)
+        {
+            return Ok(response.Content);
+        }
+
+        if (response.ResponseError == ResponseError.Http)
+        {
+            if (!string.IsNullOrWhiteSpace(response.Raw))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Raw);
+            }
+            else if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Error);
+            }
+            else
+            {
+                return StatusCode((int)response.HttpStatusCode);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(response.Error))
+        {
+            return StatusCode(500, response.Error);
+        }
+
+        return StatusCode(500, "unexpected response received while executing the request");
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id)
+    {
+        var command = new GetPostalCodeQuery(id);
+
+        var response = await _mediator.Send(command);
+
+        if (!response.IsError)
+        {
+            return Ok(response.Content);
+        }
+
+        if (response.ResponseError == ResponseError.Http)
+        {
+            if (!string.IsNullOrWhiteSpace(response.Raw))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Raw);
+            }
+            else if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Error);
+            }
+            else
+            {
+                return StatusCode((int)response.HttpStatusCode);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(response.Error))
+        {
+            return StatusCode(500, response.Error);
+        }
+
+        return StatusCode(500, "unexpected response received while executing the request");
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Edit(string id, [FromBody] EditPostalCodeRequestModel model)
+    {
+        var command = new EditPostalCodeCommand(id, model);
 
         var response = await _mediator.Send(command);
 

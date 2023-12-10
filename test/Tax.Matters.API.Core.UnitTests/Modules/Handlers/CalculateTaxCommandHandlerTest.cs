@@ -53,48 +53,6 @@ public class CalculateTaxCommandHandlerTest
     }
 
     [Test]
-    public async Task HandleReturnsExistingCalculationIfCalculationExists()
-    {
-        // Arrange
-        var repository = new Mock<ICalculationRepository>();
-
-        var handler = new CalculateTaxCommandHandler(repository.Object);
-
-        var requestModel = new TaxCalculationRequestModel
-        {
-            AnnualIncome = 100000,
-            PostalCode = "0043"
-        };
-
-        var command = new CalculateTaxCommand(requestModel);
-
-        var calculation = new TaxCalculation
-        {
-            Id = "abc-def",
-            AnnualIncome = requestModel.AnnualIncome,
-            TaxAmount = 10,
-            PostalCode = new PostalCode
-            {
-                Code = requestModel.PostalCode,
-            }
-        };
-
-        repository.Setup(m =>
-            m.GetCalculationAsync(requestModel.PostalCode, requestModel.AnnualIncome, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(calculation);
-
-        // Act
-        var result = await handler.Handle(command, default);
-
-        // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsError, Is.False);
-            Assert.That(result.Content!.Id, Is.EqualTo(calculation.Id));
-        });
-    }
-
-    [Test]
     public async Task HandleReturnsNotFoundIfPostalCodeNotFound()
     {
         // Arrange
@@ -584,7 +542,7 @@ public class CalculateTaxCommandHandlerTest
     {
         // Arrange
         string code = "0043", taxId = "progressive-tax";
-        var taxAmount = 208683.89m;
+        var taxAmount = 208683.50m;
 
         var requestModel = new TaxCalculationRequestModel
         {

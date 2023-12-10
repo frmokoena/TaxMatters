@@ -29,20 +29,6 @@ public class CalculateTaxCommandHandler(ICalculationRepository repository) : IRe
             throw new InvalidOperationException("Income can never be less than 0");
         }
 
-        var taxCalculation = await _repository.GetCalculationAsync(
-            request.Model.PostalCode,
-            request.Model.AnnualIncome,
-            cancellationToken);
-
-        // return existing if available
-        if (taxCalculation != null)
-        {
-            return new Response<TaxCalculation>(
-                        taxCalculation,
-                        raw: string.Empty,
-                        HttpStatusCode.OK);
-        }
-
         var postalCode = await _repository.GetPostalCodeAsync(request.Model.PostalCode, cancellationToken);
 
         if (postalCode == null)
@@ -102,7 +88,7 @@ public class CalculateTaxCommandHandler(ICalculationRepository repository) : IRe
 
 
     private async Task<Response<TaxCalculation>> CalculateProgressiveTaxAsync(
-        decimal annualIncome, 
+        decimal annualIncome,
         PostalCode postalCode,
         CancellationToken cancellationToken)
     {
@@ -116,7 +102,7 @@ public class CalculateTaxCommandHandler(ICalculationRepository repository) : IRe
         }
 
         var table = await _repository.GetProgressiveIncomeTaxTableAsync(
-            postalCode.IncomeTax.Id, 
+            postalCode.IncomeTax.Id,
             annualIncome,
             cancellationToken);
 
@@ -192,7 +178,8 @@ public class CalculateTaxCommandHandler(ICalculationRepository repository) : IRe
             }
             else
             {
-                bracketShare = bracket.MaximumIncome.Value - bracket.MinimumIncome;
+                bracketShare = bracket.MinimumIncome == 0 ?
+                    bracket.MaximumIncome.Value - bracket.MinimumIncome : bracket.MaximumIncome.Value - bracket.MinimumIncome + 1;
 
                 if (bracketShare > residual)
                 {

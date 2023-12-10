@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Globalization;
 using System.Net;
 using Tax.Matters.API.Core.Modules.TaxManagement.Queries;
 using Tax.Matters.API.Core.Wrappers;
@@ -19,14 +20,12 @@ public class TaxManagementControllerTest
 
         var controller = new TaxManagementController(mediator.Object);
 
-        var list = new PageList<IncomeTax>(new List<IncomeTax>(), count: 0, pageIndex: 1);
-
-        var response = new Response<PageList<IncomeTax>>(
-            list,
+        var response = new Response<IEnumerable<IncomeTax>>(
+            new List<IncomeTax>(),
             raw: string.Empty,
             HttpStatusCode.OK);
 
-        mediator.Setup(m => m.Send(It.IsAny<GetTaxCalculationTypesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
+        mediator.Setup(m => m.Send(It.IsAny<ListTaxCalculationTypesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
 
         // Act
         var result = await controller.ListTaxCalculationTypes();
@@ -43,14 +42,12 @@ public class TaxManagementControllerTest
 
         var controller = new TaxManagementController(mediator.Object);
 
-        var list = new PageList<IncomeTax>(new List<IncomeTax>(), count: 0, pageIndex: 1);
-
-        var response = new Response<PageList<IncomeTax>>(
+        var response = new Response<IEnumerable<IncomeTax>>(
             raw: null,
             reason: "entity not found",
             statusCode: HttpStatusCode.NotFound);
 
-        mediator.Setup(m => m.Send(It.IsAny<GetTaxCalculationTypesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
+        mediator.Setup(m => m.Send(It.IsAny<ListTaxCalculationTypesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
 
         // Act
         var result = await controller.ListTaxCalculationTypes();
@@ -73,14 +70,12 @@ public class TaxManagementControllerTest
 
         var controller = new TaxManagementController(mediator.Object);
 
-        var list = new PageList<IncomeTax>(new List<IncomeTax>(), count: 0, pageIndex: 1);
-
-        var response = new Response<PageList<IncomeTax>>(
+        var response = new Response<IEnumerable<IncomeTax>>(
             raw: null,
             reason: null,
             statusCode: HttpStatusCode.Conflict);
 
-        mediator.Setup(m => m.Send(It.IsAny<GetTaxCalculationTypesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
+        mediator.Setup(m => m.Send(It.IsAny<ListTaxCalculationTypesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
 
         // Act
         var result = await controller.ListTaxCalculationTypes();
@@ -101,9 +96,9 @@ public class TaxManagementControllerTest
 
         var ex = new ArgumentNullException("param");
 
-        var response = new Response<PageList<IncomeTax>>(ex);
+        var response = new Response<IEnumerable<IncomeTax>>(ex);
 
-        mediator.Setup(m => m.Send(It.IsAny<GetTaxCalculationTypesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
+        mediator.Setup(m => m.Send(It.IsAny<ListTaxCalculationTypesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
 
         // Act
         var result = await controller.ListTaxCalculationTypes();

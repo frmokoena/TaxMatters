@@ -72,8 +72,8 @@ public class APIClient(
     }
 
     public async Task<IResponse<T>> EditAsync<T, TContent>(
-        string uri,
         TContent content,
+        string uri,
         string? baseUri = null,
         string? clientName = null,
         string? apiKey = null,

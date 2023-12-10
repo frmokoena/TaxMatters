@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net;
 using Tax.Matters.Domain.Entities;
 using Tax.Matters.Web.Core.Modules.PostalCodes.Commands;
 using Tax.Matters.Web.Core.Modules.PostalCodes.Models;
@@ -45,21 +46,14 @@ public class CreateModel(IMediator mediator) : PageModel
                 return RedirectToPage("./Index");
             }
 
-            if(result.HttpStatusCode == System.Net.HttpStatusCode.Conflict)
+            if (!string.IsNullOrWhiteSpace(result.Error))
             {
-                ModelState.AddModelError("", "The postal code already exists.");
+                // We can intercept the error to present user friendly message and possibly redact sensitive information
+                ModelState.AddModelError("", result.Error);
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(result.Error))
-                {
-                    // We can intercept the error to present user friendly message and possibly redact sensitive information
-                    ModelState.AddModelError("", result.Error);
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Unexpected response received while executing the request");
-                }
+                ModelState.AddModelError("", "Unexpected response received while executing the request");
             }
         }
 
@@ -75,7 +69,7 @@ public class CreateModel(IMediator mediator) : PageModel
 
         if (!response.IsError)
         {
-            TaxCalculationSelectList = new SelectList(response.Content, nameof(IncomeTax.Id), nameof(IncomeTax.TypeName),selected);
+            TaxCalculationSelectList = new SelectList(response.Content, nameof(IncomeTax.Id), nameof(IncomeTax.TypeName), selected);
         }
         else
         {

@@ -2,7 +2,13 @@
 
 ## Introduction
 
-This application is written in C#/.NET 8.0. It follows a clean architecture. The core applications are loosely coupled and any client application (e.g. Razor, Angular, Vue, etc.) can be integrated into the architecture with minimal effort. In this way, the core applications can be scaled independently of the clients.
+The solution offers an application for performing tax calculations. It utilizes ASP.NET Core Web API and ASP.NET Core Web App (Razor Pages). The API exposes various endpoints that can be found in the Swagger UI (i.e. `https:/localhost:5443/swagger`). For example, a request to calculate taxes would look like:
+
+    POST /services/TaxCalculations/calculate
+    {
+      "postalCode": "0042",
+      "annualIncome": 500000
+    }
 
 ## Table Of Contents
 
@@ -20,7 +26,7 @@ This application is written in C#/.NET 8.0. It follows a clean architecture. The
   - [The Core API Application](#the-core-api-application-taxmattersapicore)
   - [The Client Project](#the-client-project-taxmattersclient)
   - [The Domain Project](#the-domain-project-taxmattersdomain)
-  - [The Infrastructure Project](##the-infrastructure-project)
+  - [The Infrastructure Project](#the-infrastructure-project)
   - [The Web Application](#the-web-application-taxmattersweb)  
   - [The Core Web Application](#the-core-web-application-taxmatterswebcore)
   - [The Test Projects](#the-test-projects)
@@ -60,9 +66,9 @@ To build and run the project, open a command prompt to the root of the solution,
 
 ## Running the application
 
-1. To run the application, open a command prompt (each for api and the web, respectively) to the `assets` folder created from the previous step (should be at the root of the solution), or extracted from the `assets.zip`, and run the executable:
+1. To run the application, open a command prompt (each for api and the web, respectively) to the `assets` folder created from the previous step (should be at the root of the solution), or extracted from the `assets.zip`, and run the executable. The API initializes the database ([LocalDB](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb)) with the initial test data during startup.
 
-   - From the API Command Prompt:
+   - From the API Command Prompt:     
 
         ```
         cd ./api/
@@ -176,20 +182,6 @@ In the code below, the `[Timestamp]` attribute maps a property to a SQL Server `
 ## Audit Trail
 
 The system maintains a complete log of all operations that alter the state of auditable entities (i.e., `Add`, `Modify`, `Delete`).
-
-    public class AuditLog
-    {
-      public string Id { get; set; } = default!;
-      public string? UserId { get; set; }
-      public DateTime EventDate { get; set; }
-      public string EventType { get; set; } = default!;
-      public string TableName { get; set; } = default!;
-      public string RecordId { get; set; } = default!;
-      public string ColumnName {  get; set; } = default!;
-      public string? OriginalValue {  get; set; }
-      public string? NewValue { get; set; }
-    }
-
 
 # Patterns Used
 
