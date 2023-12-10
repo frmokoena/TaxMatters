@@ -35,7 +35,7 @@ This application is written in C#/.NET 8.0. It follows a clean architecture. The
 
 ## Building the solution
 
-The solution contains the release assets in the file `assets.zip`. The assets can be unzipped and step `1` below can be skipped.
+The solution contains the release assets in the file `assets.zip`. The assets can be unzipped and this section can be skipped.
 
 To build and run the project, open a command prompt to the root of the solution, and perform the following: 
 
@@ -137,7 +137,7 @@ This project harbours the business logic of the api. Our controllers are thin. T
 
 Services for integration are provided here. The web project uses the services for integration with the API. The services are client-independent. The API can also reuse the services for integration with third-party services. _**The DRY principle**_ - Maintain in one place and deploy everywhere.
 
-## The Domain Project (Tax.Matters.Domain)
+## The Domain Project (`Tax.Matters.Domain`)
 
 This houses the domain entities and models.
 
@@ -147,11 +147,11 @@ This houses the infrastructure for the data access.
 
 ## The Web Application (`Tax.Matters.Web`)
 
-This is the web frontend. This is .NET Core Razor Pages web app.
+This is the entry point of the web application. This is the ASP.NET Core Core Razor Pages web app. The app configurations are included in the `appsettings.json`
 
 ## The Core Web Application (`Tax.Matters.Web.Core`)
 
-Just like the core api project, this project harbours the business logic of the web application. Too much logic in page violates our single responsibility principle. The abstraction of the business logic allows our pages focus on display logic.
+The project harbours the business logic of the web application, which is mostly the integration calls to the api. The actual application business rules are implemented in the api. This allows us to switch to another front end framework such as Angular or Vue without compromising the business logic. The core web abstraction allows our pages fo focus on display logic.
 
 ## The Test Projects
 

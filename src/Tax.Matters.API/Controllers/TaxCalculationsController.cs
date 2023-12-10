@@ -47,7 +47,7 @@ namespace Tax.Matters.API.Controllers
                 }
                 else if (!string.IsNullOrWhiteSpace(response.Error))
                 {
-                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                    return StatusCode((int)response.HttpStatusCode, response.Error);
                 }
                 else
                 {
@@ -83,7 +83,7 @@ namespace Tax.Matters.API.Controllers
                 }
                 else if (!string.IsNullOrWhiteSpace(response.Error))
                 {
-                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                    return StatusCode((int)response.HttpStatusCode, response.Error);
                 }
                 else
                 {
@@ -119,7 +119,7 @@ namespace Tax.Matters.API.Controllers
                 }
                 else if (!string.IsNullOrWhiteSpace(response.Error))
                 {
-                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                    return StatusCode((int)response.HttpStatusCode, response.Error);
                 }
                 else
                 {
@@ -155,7 +155,7 @@ namespace Tax.Matters.API.Controllers
                 }
                 else if (!string.IsNullOrWhiteSpace(response.Error))
                 {
-                    return StatusCode((int)response.HttpStatusCode, response.Raw);
+                    return StatusCode((int)response.HttpStatusCode, response.Error);
                 }
                 else
                 {

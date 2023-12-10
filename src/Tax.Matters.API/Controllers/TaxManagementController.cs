@@ -40,7 +40,7 @@ public class TaxManagementController(IMediator mediator) : ControllerBase
             }
             else if (!string.IsNullOrWhiteSpace(response.Error))
             {
-                return StatusCode((int)response.HttpStatusCode, response.Raw);
+                return StatusCode((int)response.HttpStatusCode, response.Error);
             }
             else
             {
@@ -86,7 +86,43 @@ public class TaxManagementController(IMediator mediator) : ControllerBase
             }
             else if (!string.IsNullOrWhiteSpace(response.Error))
             {
+                return StatusCode((int)response.HttpStatusCode, response.Error);
+            }
+            else
+            {
+                return StatusCode((int)response.HttpStatusCode);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(response.Error))
+        {
+            return StatusCode(500, response.Error);
+        }
+
+        return StatusCode(500, "unexpected response received while executing the request");
+    }
+
+    [HttpGet("listtaxcalculationtypes")]
+    public async Task<IActionResult> ListTaxCalculationTypes()
+    {
+        var query = new ListTaxCalculationTypesQuery();
+
+        var response = await _mediator.Send(query);
+
+        if (!response.IsError)
+        {
+            return Ok(response.Content);
+        }
+
+        if (response.ResponseError == ResponseError.Http)
+        {
+            if (!string.IsNullOrWhiteSpace(response.Raw))
+            {
                 return StatusCode((int)response.HttpStatusCode, response.Raw);
+            }
+            else if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Error);
             }
             else
             {

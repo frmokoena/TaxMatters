@@ -56,6 +56,7 @@ public class CalculationRepository(AppDbContext context) : ICalculationRepositor
                 Code = m.Code,
                 IncomeTax = new IncomeTax
                 {
+                    Id = m.IncomeTaxId,
                     TypeName = m.IncomeTax.TypeName,
                     FlatRate = m.IncomeTax.FlatRate,
                     FlatValue = m.IncomeTax.FlatValue == null ? null : new FlatValueIncomeTax

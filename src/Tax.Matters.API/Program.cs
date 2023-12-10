@@ -37,8 +37,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// For seeding test data
-// Can be safely removed
+// Seed test data
+//     Can be safely removed
 await ContextDataSeeding.SeedContextDataAsync(app);
 
 app.Run();
