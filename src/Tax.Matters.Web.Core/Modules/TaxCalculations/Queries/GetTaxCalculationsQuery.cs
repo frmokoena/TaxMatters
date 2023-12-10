@@ -5,6 +5,13 @@ using Tax.Matters.Web.Core.Models.Dto;
 
 namespace Tax.Matters.Web.Core.Modules.TaxCalculations.Queries;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="GetTaxCalculationsQuery"/> query class
+/// </summary>
+/// <param name="keyword"></param>
+/// <param name="sortOrder"></param>
+/// <param name="pageNumber"></param>
+/// <param name="limit"></param>
 public class GetTaxCalculationsQuery(
     string? keyword,
     string? sortOrder,

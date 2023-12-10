@@ -1,5 +1,8 @@
 ﻿namespace Tax.Matters.Client;
 
+/// <summary>
+/// Defines the common actions for the client
+/// </summary>
 public interface IAPIClient
 {
     Task<IResponse<T>> CreateAsync<T, TContent>(
@@ -18,8 +21,8 @@ public interface IAPIClient
         CancellationToken cancellationToken = default);
 
     Task<IResponse<T>> EditAsync<T, TContent>(
-        string uri,
         TContent content,
+        string uri,
         string? baseUri = null,
         string? clientName = null,
         string? apiKey = null,

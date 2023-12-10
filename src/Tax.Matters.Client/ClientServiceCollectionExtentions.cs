@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Tax.Matters.Client;
 
+/// <summary>
+/// Injects client services
+/// </summary>
 public static class ClientServiceCollectionExtentions
 {
     public static IServiceCollection AddAPIClient(this IServiceCollection services)

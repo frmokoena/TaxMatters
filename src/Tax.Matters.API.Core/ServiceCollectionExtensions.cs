@@ -4,6 +4,9 @@ using Tax.Matters.API.Core.Security;
 
 namespace Tax.Matters.API.Core;
 
+/// <summary>
+/// Inject core api services
+/// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
@@ -27,6 +30,11 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Register core handlers 
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
     public static IServiceCollection AddAPICoreServices(this IServiceCollection services)
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly));

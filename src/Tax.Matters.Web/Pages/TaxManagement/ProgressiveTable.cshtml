@@ -1,11 +1,11 @@
-﻿@page
+﻿@page "{id}"
 @model Tax.Matters.Web.Pages.TaxManagement.ProgressiveTableModel
 
 @{
-    ViewData["Title"] = "Progressive Table";
+    ViewData["Title"] = "Progressive Tax Table";
 }
 
-<h2>Progressive Table</h2>
+<h2>Progressive Tax Table</h2>
 
 <p>
     <a asp-page="Index">Back to List</a>
@@ -36,7 +36,14 @@
                     @Html.DisplayFor(modelItem => item.MinimumIncome)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MaximumIncome)
+                    @if(item.MaximumIncome != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.MaximumIncome)
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
                 </td>
             </tr>
         }

@@ -5,6 +5,12 @@ using Tax.Matters.Web.Core.Models.Dto;
 
 namespace Tax.Matters.Web.Core.Modules.PostalCodes.Queries;
 
+/// <summary>
+/// Inirializes a new instance of the <see cref="GetPostalCodesQuery"/> query class
+/// </summary>
+/// <param name="keyword"></param>
+/// <param name="pageNumber"></param>
+/// <param name="limit"></param>
 public class GetPostalCodesQuery(
     string? keyword,
     int pageNumber = 1,

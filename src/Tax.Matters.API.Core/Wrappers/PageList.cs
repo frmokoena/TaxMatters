@@ -2,6 +2,10 @@
 
 namespace Tax.Matters.API.Core.Wrappers;
 
+/// <summary>
+/// Wrapper for paging results
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class PageList<T>
 {
     public PageList(IEnumerable<T> items, int count, int pageIndex, int pageSize = 20)

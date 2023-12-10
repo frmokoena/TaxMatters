@@ -2,6 +2,9 @@
 
 namespace Tax.Matters.Domain.Entities;
 
+/// <summary>
+/// Base for all auditable domain entities
+/// </summary>
 public abstract class Auditable : Base
 {
     [Display(Name = "Date Created")]

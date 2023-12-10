@@ -7,6 +7,11 @@ using Tax.Matters.Web.Core.Modules.TaxCalculations.Models;
 
 namespace Tax.Matters.Web.Core.Modules.TaxCalculations.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="CalculateTaxCommandHandler"/> handler class
+/// </summary>
+/// <param name="client"></param>
+/// <param name="optionsAccessor"></param>
 public class CalculateTaxCommandHandler(IAPIClient client, IOptions<ClientOptions> optionsAccessor) : IRequestHandler<CalculateTaxCommand, IResponse<TaxCalculation>>
 {
     private readonly IAPIClient _client = client;

@@ -16,7 +16,7 @@ public class IndexModel(IMediator mediator, IConfiguration configuration) : Page
     public string? CurrentFilter { get; set; }
     public string? CurrentSort { get; set; }
 
-    public PageListDto<TaxCalculation> Calculations { get; set; }
+    public PageListDto<TaxCalculation> Calculations { get; set; } = default!;
 
     public async Task OnGetAsync(
         string sortOrder,

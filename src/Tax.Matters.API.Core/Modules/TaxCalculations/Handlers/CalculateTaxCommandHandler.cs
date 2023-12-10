@@ -1,17 +1,20 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Tax.Matters.API.Core.Modules.TaxCalculations.Commands;
 using Tax.Matters.Client;
 using Tax.Matters.Domain.Entities;
 using Tax.Matters.Domain.Enums;
-using Tax.Matters.Infrastructure.Data;
+using Tax.Matters.Infrastructure.Data.Repositories;
 
 namespace Tax.Matters.API.Core.Modules.TaxCalculations.Handlers;
 
-public class CalculateTaxCommandHandler(AppDbContext context) : IRequestHandler<CalculateTaxCommand, IResponse<TaxCalculation>>
+/// <summary>
+/// Intialiazes a new instance of the <see cref="CalculateTaxCommandHandler"/> handler class 
+/// </summary>
+/// <param name="repository"></param>
+public class CalculateTaxCommandHandler(ICalculationRepository repository) : IRequestHandler<CalculateTaxCommand, IResponse<TaxCalculation>>
 {
-    private readonly AppDbContext _context = context;
+    private readonly ICalculationRepository _repository = repository;
 
     public async Task<IResponse<TaxCalculation>> Handle(
         CalculateTaxCommand request, CancellationToken cancellationToken)
@@ -26,62 +29,7 @@ public class CalculateTaxCommandHandler(AppDbContext context) : IRequestHandler<
             throw new InvalidOperationException("Income can never be less than 0");
         }
 
-        var taxCalculation = await _context.TaxCalculation
-            .Where(
-                m =>
-                m.AnnualIncome == request.Model.AnnualIncome
-                && m.PostalCode.Code == request.Model.PostalCode).Select(m => new TaxCalculation
-                {
-                    Id = m.Id,
-                    AnnualIncome = m.AnnualIncome,
-                    TaxAmount = m.TaxAmount,
-                    DateCreated = m.DateCreated,
-                    PostalCode = new PostalCode
-                    {
-                        Code = m.PostalCode.Code,
-                        IncomeTax = new IncomeTax
-                        {
-                            TypeName = m.PostalCode.IncomeTax.TypeName
-                        }
-                    },
-                    Version = m.Version
-                })
-        .FirstOrDefaultAsync(cancellationToken: cancellationToken);
-
-        // return existing if available
-        if (taxCalculation != null)
-        {
-            return new Response<TaxCalculation>(
-                        taxCalculation,
-                        raw: string.Empty,
-                        HttpStatusCode.OK);
-        }
-
-        var postalCode = await _context.PostalCode
-            .Where(m => m.Code == request.Model.PostalCode)
-            .Select(m => new PostalCode
-            {
-                Id = m.Id,
-                Code = m.Code,
-                IncomeTax = new IncomeTax
-                {
-                    TypeName = m.IncomeTax.TypeName,
-                    FlatRate = m.IncomeTax.FlatRate,
-                    FlatValue = m.IncomeTax.FlatValue == null ? null : new FlatValueIncomeTax
-                    {
-                        Amount = m.IncomeTax.FlatValue.Amount,
-                        Threshold = m.IncomeTax.FlatValue.Threshold,
-                        ThresholdRate = m.IncomeTax.FlatValue.ThresholdRate
-                    },
-                    ProgressiveTaxTable = m.IncomeTax.ProgressiveTaxTable.Select(m => new ProgressiveIncomeTax
-                    {
-                        MinimumIncome = m.MinimumIncome,
-                        MaximumIncome = m.MaximumIncome,
-                        Rate = m.Rate
-                    }).ToList()
-                }
-            })
-            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        var postalCode = await _repository.GetPostalCodeAsync(request.Model.PostalCode, cancellationToken);
 
         if (postalCode == null)
         {
@@ -108,7 +56,7 @@ public class CalculateTaxCommandHandler(AppDbContext context) : IRequestHandler<
 
                 break;
             case TaxCalculationType.Progressive:
-                var result = CalculateProgressiveTax(request.Model.AnnualIncome, postalCode);
+                var result = await CalculateProgressiveTaxAsync(request.Model.AnnualIncome, postalCode, cancellationToken);
 
                 if (result.IsError)
                 {
@@ -130,9 +78,7 @@ public class CalculateTaxCommandHandler(AppDbContext context) : IRequestHandler<
             PostalCodeId = postalCode.Id
         };
 
-        _context.TaxCalculation.Add(calculation);
-
-        await _context.SaveChangesAsync(cancellationToken);
+        await _repository.AddAsync(calculation, cancellationToken);
 
         return new Response<TaxCalculation>(
                     calculation,
@@ -141,45 +87,60 @@ public class CalculateTaxCommandHandler(AppDbContext context) : IRequestHandler<
     }
 
 
-    private static Response<TaxCalculation> CalculateProgressiveTax(decimal annualIncome, PostalCode postalCode)
+    private async Task<Response<TaxCalculation>> CalculateProgressiveTaxAsync(
+        decimal annualIncome,
+        PostalCode postalCode,
+        CancellationToken cancellationToken)
     {
-        if (postalCode.IncomeTax.ProgressiveTaxTable.Count == 0)
+        // Sanity check
+        if (postalCode?.IncomeTax?.TypeName != TaxCalculationType.Progressive)
+        {
+            return new Response<TaxCalculation>(
+                raw: null,
+                reason: "Invalid calculation type",
+                statusCode: HttpStatusCode.BadRequest);
+        }
+
+        var table = await _repository.GetProgressiveIncomeTaxTableAsync(
+            postalCode.IncomeTax.Id,
+            annualIncome,
+            cancellationToken);
+
+        if (table.Count == 0)
         {
             return new Response<TaxCalculation>(
                 raw: null,
                 reason: "Progressive tax table is not defined",
-                statusCode: HttpStatusCode.BadRequest);
+                statusCode: HttpStatusCode.Conflict);
         }
 
-        var table = postalCode.IncomeTax.ProgressiveTaxTable.OrderBy(m => m.MinimumIncome).ToList();
-
-        // sanity check
+        // Sanity check
         var firstBracket = table[0];
         if (firstBracket.MinimumIncome > annualIncome)
         {
             return new Response<TaxCalculation>(
                 raw: null,
                 reason: "Progressive tax table is not applicable to the provided income",
-                statusCode: HttpStatusCode.BadRequest);
+                statusCode: HttpStatusCode.Conflict);
         }
 
         decimal taxAmount = 0;
-        var remaining = annualIncome;
+        var residual = annualIncome;
 
         ProgressiveIncomeTax? bracket, nextBracket;
 
-        decimal bracketShare;
+        decimal bracketShare, bracketTaxAmount;
 
         for (var i = 0; i < table.Count; i++)
         {
-            if (remaining == 0)
+            if (residual == 0)
             {
                 break;
             }
 
             bracket = table[i];
 
-            // sanity check
+            // Sanity check
             if (bracket.MaximumIncome != null && bracket.MinimumIncome > bracket.MaximumIncome)
             {
                 return new Response<TaxCalculation>(
@@ -197,7 +158,7 @@ public class CalculateTaxCommandHandler(AppDbContext context) : IRequestHandler<
                 nextBracket = null;
             }
 
-            // sanity check
+            // Sanity check
             if (nextBracket != null)
             {
                 if (bracket.MaximumIncome == null || nextBracket.MinimumIncome - bracket.MaximumIncome != 1)
@@ -211,22 +172,26 @@ public class CalculateTaxCommandHandler(AppDbContext context) : IRequestHandler<
 
             if (bracket.MaximumIncome == null)
             {
-                taxAmount += bracket.Rate / 100 * remaining;
-                remaining = 0;
+                bracketTaxAmount = bracket.Rate / 100 * residual;
+                taxAmount += bracketTaxAmount;
+                residual = 0;
             }
             else
             {
-                bracketShare = bracket.MaximumIncome.Value - bracket.MinimumIncome;
+                bracketShare = bracket.MinimumIncome == 0 ?
+                    bracket.MaximumIncome.Value - bracket.MinimumIncome : bracket.MaximumIncome.Value - bracket.MinimumIncome + 1;
 
-                if (bracketShare > remaining)
+                if (bracketShare > residual)
                 {
-                    taxAmount += bracket.Rate / 100 * remaining;
-                    remaining = 0;
+                    bracketTaxAmount = bracket.Rate / 100 * residual;
+                    taxAmount += bracketTaxAmount;
+                    residual = 0;
                 }
                 else
                 {
-                    taxAmount += bracket.Rate / 100 * bracketShare;
-                    remaining -= bracketShare;
+                    bracketTaxAmount = bracket.Rate / 100 * bracketShare;
+                    taxAmount += bracketTaxAmount;
+                    residual -= bracketShare;
                 }
             }
         }

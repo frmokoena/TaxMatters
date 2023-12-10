@@ -2,6 +2,9 @@
 
 namespace Tax.Matters.API.Core.Extensions;
 
+/// <summary>
+/// Extention provides handy way to build query predicate
+/// </summary>
 public static class ExpressionTreeExtensions
 {
     public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> expr1,

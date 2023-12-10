@@ -3,6 +3,9 @@ using Tax.Matters.Domain.Enums;
 
 namespace Tax.Matters.Domain.Entities
 {
+    /// <summary>
+    /// Models the tax entity
+    /// </summary>
     public class IncomeTax : Auditable
     {
         [Display(Name = "Tax Calculation Type")]

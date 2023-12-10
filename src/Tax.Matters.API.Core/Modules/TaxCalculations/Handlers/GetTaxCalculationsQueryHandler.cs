@@ -11,6 +11,10 @@ using Tax.Matters.Infrastructure.Data;
 
 namespace Tax.Matters.API.Core.Modules.TaxCalculations.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="GetTaxCalculationsQueryHandler"/> handler class
+/// </summary>
+/// <param name="context"></param>
 public class GetTaxCalculationsQueryHandler(AppDbContext context) : IRequestHandler<GetTaxCalculationsQuery, IResponse<PageList<TaxCalculation>>>
 {
     private readonly AppDbContext _context = context;

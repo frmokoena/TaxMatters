@@ -9,7 +9,10 @@ namespace Tax.Matters.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok();
+            return Ok(new
+            {
+                status = "ok"
+            });
         }
     }
 }

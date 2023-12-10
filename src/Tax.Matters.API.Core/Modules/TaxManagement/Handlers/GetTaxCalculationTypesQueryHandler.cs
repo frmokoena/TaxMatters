@@ -8,6 +8,10 @@ using Tax.Matters.Infrastructure.Data;
 
 namespace Tax.Matters.API.Core.Modules.TaxManagement.Handlers;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="GetTaxCalculationTypesQueryHandler"/> handler class
+/// </summary>
+/// <param name="context"></param>
 public class GetTaxCalculationTypesQueryHandler(AppDbContext context) : IRequestHandler<GetTaxCalculationTypesQuery, IResponse<PageList<IncomeTax>>>
 {
     private readonly AppDbContext _context = context;

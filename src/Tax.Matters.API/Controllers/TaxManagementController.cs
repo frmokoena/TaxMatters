@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tax.Matters.API.Core.Modules.TaxManagement.Models;
 using Tax.Matters.API.Core.Modules.TaxManagement.Queries;
+using Tax.Matters.Client;
 
 namespace Tax.Matters.API.Controllers;
 
@@ -14,7 +15,7 @@ public class TaxManagementController(IMediator mediator) : ControllerBase
     private readonly IMediator _mediator = mediator;
 
     [HttpGet("taxcalculationtypes")]
-    public async Task<IActionResult> List(int pageNumber = 1, int limit = 20)
+    public async Task<IActionResult> ListTaxCalculationTypes(int pageNumber = 1, int limit = 20)
     {
         var filteringModel = new TaxCalculationTypesFilteringModel
         {
@@ -31,15 +32,28 @@ public class TaxManagementController(IMediator mediator) : ControllerBase
             return Ok(response.Content);
         }
 
-        if (!string.IsNullOrWhiteSpace(response.HttpReasonPhrase))
+        if (response.ResponseError == ResponseError.Http)
         {
-            return StatusCode((int)response.HttpStatusCode, new
+            if (!string.IsNullOrWhiteSpace(response.Raw))
             {
-                error = response.HttpReasonPhrase
-            });
+                return StatusCode((int)response.HttpStatusCode, response.Raw);
+            }
+            else if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Error);
+            }
+            else
+            {
+                return StatusCode((int)response.HttpStatusCode);
+            }
         }
 
-        return StatusCode((int)response.HttpStatusCode);
+        if (!string.IsNullOrWhiteSpace(response.Error))
+        {
+            return StatusCode(500, response.Error);
+        }
+
+        return StatusCode(500, "unexpected response received while executing the request");
     }
 
     [HttpGet("progressive")]
@@ -64,14 +78,63 @@ public class TaxManagementController(IMediator mediator) : ControllerBase
             return Ok(response.Content);
         }
 
-        if (!string.IsNullOrWhiteSpace(response.HttpReasonPhrase))
+        if (response.ResponseError == ResponseError.Http)
         {
-            return StatusCode((int)response.HttpStatusCode, new
+            if (!string.IsNullOrWhiteSpace(response.Raw))
             {
-                error = response.HttpReasonPhrase
-            });
+                return StatusCode((int)response.HttpStatusCode, response.Raw);
+            }
+            else if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Error);
+            }
+            else
+            {
+                return StatusCode((int)response.HttpStatusCode);
+            }
         }
 
-        return StatusCode((int)response.HttpStatusCode);
+        if (!string.IsNullOrWhiteSpace(response.Error))
+        {
+            return StatusCode(500, response.Error);
+        }
+
+        return StatusCode(500, "unexpected response received while executing the request");
+    }
+
+    [HttpGet("listtaxcalculationtypes")]
+    public async Task<IActionResult> ListTaxCalculationTypes()
+    {
+        var query = new ListTaxCalculationTypesQuery();
+
+        var response = await _mediator.Send(query);
+
+        if (!response.IsError)
+        {
+            return Ok(response.Content);
+        }
+
+        if (response.ResponseError == ResponseError.Http)
+        {
+            if (!string.IsNullOrWhiteSpace(response.Raw))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Raw);
+            }
+            else if (!string.IsNullOrWhiteSpace(response.Error))
+            {
+                return StatusCode((int)response.HttpStatusCode, response.Error);
+            }
+            else
+            {
+                return StatusCode((int)response.HttpStatusCode);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(response.Error))
+        {
+            return StatusCode(500, response.Error);
+        }
+
+        return StatusCode(500, "unexpected response received while executing the request");
     }
 }

@@ -1,5 +1,8 @@
 ﻿namespace Tax.Matters.Domain.Entities;
 
+/// <summary>
+/// Models the audit logs in the system
+/// </summary>
 public class AuditLog
 {
     public string Id { get; set; } = default!;

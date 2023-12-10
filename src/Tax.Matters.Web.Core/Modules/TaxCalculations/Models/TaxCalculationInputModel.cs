@@ -2,6 +2,9 @@
 
 namespace Tax.Matters.Web.Core.Modules.TaxCalculations.Models;
 
+/// <summary>
+/// Class <c>TaxCalculationInputModel</c> models the request object for tax calculation
+/// </summary>
 public class TaxCalculationInputModel
 {
     [Required(ErrorMessage = "Required")]

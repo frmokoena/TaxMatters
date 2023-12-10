@@ -3,6 +3,10 @@ using System.Net.Http.Headers;
 
 namespace Tax.Matters.Client;
 
+/// <summary>
+/// Wrapper for the client responses
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public interface IResponse<T>
 {
     T? Content { get; }

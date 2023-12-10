@@ -5,6 +5,12 @@ using Tax.Matters.Web.Core.Models.Dto;
 
 namespace Tax.Matters.Web.Core.Modules.TaxManagement.Queries;
 
+/// <summary>
+/// Initializes a new instance of the <see cref="GetProgressiveTableQuery"/> query class
+/// </summary>
+/// <param name="incomeTaxId"></param>
+/// <param name="pageNumber"></param>
+/// <param name="limit"></param>
 public class GetProgressiveTableQuery(
     string incomeTaxId,
     int pageNumber = 1,

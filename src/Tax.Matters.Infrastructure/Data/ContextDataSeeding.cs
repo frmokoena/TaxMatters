@@ -32,17 +32,17 @@ public static class ContextDataSeeding
                 return;   // Context has been seeded
             }
 
-            // Flat rate
-            var flatRate = new IncomeTax
+            // Flat rate tax
+            var flatRateTax = new IncomeTax
             {
                 FlatRate = 17.5m,
                 TypeName = TaxCalculationType.FlatRate,
             };
 
-            context.Add(flatRate);
+            context.Add(flatRateTax);
 
-            // Flat value
-            var flatValue = new IncomeTax
+            // Flat value tax
+            var flatValueTax = new IncomeTax
             {
                 TypeName = TaxCalculationType.FlatValue,
                 FlatValue = new FlatValueIncomeTax
@@ -53,54 +53,54 @@ public static class ContextDataSeeding
                 }
             };
 
-            context.Add(flatValue);
+            context.Add(flatValueTax);
 
-            // Progressive
-            var progressive = new IncomeTax
+            // Progressive tax
+            var progressiveTax = new IncomeTax
             {
                 TypeName = TaxCalculationType.Progressive
             };
 
-            context.Add(progressive);
+            context.Add(progressiveTax);
 
             context.AddRange(new ProgressiveIncomeTax
             {
-                IncomeTaxId = progressive.Id,
+                IncomeTaxId = progressiveTax.Id,
                 MinimumIncome = 0m,
                 MaximumIncome = 8350m,
                 Rate = 10m
             },
             new ProgressiveIncomeTax
             {
-                IncomeTaxId = progressive.Id,
+                IncomeTaxId = progressiveTax.Id,
                 MinimumIncome = 8351m,
                 MaximumIncome = 33950m,
                 Rate = 15m
             },
             new ProgressiveIncomeTax
             {
-                IncomeTaxId = progressive.Id,
+                IncomeTaxId = progressiveTax.Id,
                 MinimumIncome = 33951m,
                 MaximumIncome = 82250m,
                 Rate = 25m
             },
             new ProgressiveIncomeTax
             {
-                IncomeTaxId = progressive.Id,
+                IncomeTaxId = progressiveTax.Id,
                 MinimumIncome = 82251m,
                 MaximumIncome = 171550m,
                 Rate = 28m
             },
             new ProgressiveIncomeTax
             {
-                IncomeTaxId = progressive.Id,
+                IncomeTaxId = progressiveTax.Id,
                 MinimumIncome = 171551m,
                 MaximumIncome = 372950m,
                 Rate = 33m
             },
             new ProgressiveIncomeTax
             {
-                IncomeTaxId = progressive.Id,
+                IncomeTaxId = progressiveTax.Id,
                 MinimumIncome = 372951,
                 Rate = 35m
             });
@@ -109,22 +109,22 @@ public static class ContextDataSeeding
             context.AddRange(new PostalCode
             {
                 Code = "7441",
-                IncomeTaxId = progressive.Id
+                IncomeTaxId = progressiveTax.Id
             },
             new PostalCode
             {
                 Code = "A100",
-                IncomeTaxId = flatValue.Id
+                IncomeTaxId = flatValueTax.Id
             },
             new PostalCode
             {
                 Code = "7000",
-                IncomeTaxId = flatRate.Id
+                IncomeTaxId = flatRateTax.Id
             },
             new PostalCode
             {
                 Code = "1000",
-                IncomeTaxId = progressive.Id
+                IncomeTaxId = progressiveTax.Id
             });
 
             try
