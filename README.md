@@ -55,7 +55,7 @@ To build and run the project, open a command prompt to the root of the solution,
     ```
     cd ./src/Tax.Matters.API
     dotnet publish -o ../../assets/api
-    cd ..
+    cd ../..
     ```
 
 3. Publish the Web project to a folder:
@@ -66,7 +66,7 @@ To build and run the project, open a command prompt to the root of the solution,
 
 ## Running the application
 
-1. To run the application, open a command prompt (each for api and the web, respectively) to the `assets` folder created from the previous step (should be at the root of the solution), or extracted from the `assets.zip`, and run the executable. The API initializes the database ([LocalDB](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb)) with the initial test data during startup.
+1. To run the application, open two command prompts (for api and web, respectively) to the `assets` folder created from the previous step (should be at the root of the solution), or extracted from the `assets.zip`, and run the executable. The API initializes the database ([LocalDB](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb)) with the initial test data during startup.
 
    - From the API Command Prompt:     
 
