@@ -86,15 +86,17 @@ To build and run the project, open a command prompt to the root of the solution,
 
 # Architecture and Design Decisions
 
+The development follows a clean architecture. The core applications are loosely coupled and any client application (e.g. Razor, Angular, Vue, etc.) can be integrated into the architecture with minimal effort. In this way, the core applications can be scaled independently of the clients. The solution projects are briefly described below.
+
 ## The API Application (`Tax.Matters.API`)
 
-This is the Api project. It provides the Api endpoints for the clients. The Api is protected by an Api key to prevent unauthorized use. This can easily be changed to `Oauth` as it is a pluggable middleware.
+This is the Api project. It provides the Api endpoints for the clients. The Api is protected by an Api key to prevent unauthorised use. This can easily be changed to `OAuth` as it is a pluggable middleware.
 
 ### The API Security
 
-Authorized access is required for all the endpoints.
+Authorised access is required for all endpoints.
 
-To deter unauthorized access, all unauthorized accesses receive the following response (This can be changed to anything else, including the `401` response):
+To deter unauthorised access, all unauthorised access will receive the following response (this can be changed to any other preferred response, including the 401 response):
 
     {
         "title": "Not Found",
@@ -104,20 +106,20 @@ To deter unauthorized access, all unauthorized accesses receive the following re
 
 The Api also uses the policy-based authorization. `i.e.` Only the `web` client is allowed access to tax management endpoints:
 
-    /services/taxmanagement/*`
+    /services/TaxManagement/*`
 
 
-The api can be tested with the 2 clients provided in the `appsettings`.
+The api can be tested with the 2 clients provided in the `appsettings.json`.
 
     "AuthorizedClients": {
       "Clients": [
         {
-          "name": "web"
-          "key": ...
+          "name": "Web",
+          "key": "d5a548b2-50df-40d9-88d3-e366d833892f"
         },
         {
-          "name": "integration",
-          "key": ...
+          "name": "thirdparty",
+          "key": "a110ab4f-1cf1-478e-b78b-4a09b50b3e73"
         }
       ]
     }
@@ -126,16 +128,15 @@ The api can be tested with the 2 clients provided in the `appsettings`.
 
      Authorization: Basic <credentials>
 
-where `<credential>` is `base64` of `name:apiKey`
-
+where `<credential>` is `base64` of `name:key`
 
 ## The Core API Application (`Tax.Matters.API.Core`)
 
-This project harbours the business logic of the api. Our controllers are thin. Too much logic in a controller violates the single responsibility principle (SRP) of our `SOLID` principles. The abstraction of the business logic allows our controllers to have only 3 lines.
+This project hosts the business logic of the Api. This allows us to have thin controllers. Too much logic in a controller violates the single responsibility principle (SRP) of the `SOLID` principles.
 
 ## The Client Project (`Tax.Matters.Client`)
 
-Services for integration are provided here. The web project uses the services for integration with the API. The services are client-independent. The API can also reuse the services for integration with third-party services. _**The DRY principle**_ - Maintain in one place and deploy everywhere.
+The services for the integration are provided here. The web frontend project uses the services for integration with the API. The services are client-independent. The API can also reuse the services for integration with third-party services. This contributes to compliance with the **DRY** principle: Maintain in one place and use everywhere.
 
 ## The Domain Project (`Tax.Matters.Domain`)
 
@@ -143,34 +144,59 @@ This houses the domain entities and models.
 
 ## The Infrastructure Project
 
-This houses the infrastructure for the data access.
+This houses the infrastructure and repositories for the data access.
 
 ## The Web Application (`Tax.Matters.Web`)
 
-This is the entry point of the web application. This is the ASP.NET Core Core Razor Pages web app. The app configurations are included in the `appsettings.json`
+This is the entry point for the web front-end application. This is the ASP.NET Core Razor Pages web application, which is responsible for the UI logic. The app configurations are contained in the `appsettings.json` file.
 
 ## The Core Web Application (`Tax.Matters.Web.Core`)
 
-The project harbours the business logic of the web application, which is mostly the integration calls to the api. The actual application business rules are implemented in the api. This allows us to switch to another front end framework such as Angular or Vue without compromising the business logic. The core web abstraction allows our pages fo focus on display logic.
+The project hosts the business logic of the web application, which is mainly the integration calls to the API. The actual business rules of the application are implemented in the API. This allows us to switch to another front-end framework such as Angular or Vue without affecting the business logic. The core web abstraction allows our pages to focus on the display logic.
 
 ## The Test Projects
 
-Each project has corresponding test project with the calculate command receiving the most coverage.
+Each project has a corresponding test project.
 
 ## Concurrency Conflicts
 
 The system implements optimistic concurrency via concurrency token, `Version`. i.e. The data modification fail on save if the data has changed since it was queried.
 
+In the code below, the `[Timestamp]` attribute maps a property to a SQL Server `rowversion` column. Since `rowversion` automatically changes when the row is updated, this provides a very useful concurrency token with minimum-effort that protects the entire row.
+
+    public class IncomeTax
+    {
+      public string Id { get; set; }
+      public ICollection<ProgressiveIncomeTax> ProgressiveTaxTable { get; set; } = [];
+
+      [Timestamp]
+      public byte[] Version { get; set; }
+    }
+
 ## Audit Trail
 
-There system provides full `Audit Trail` in `AuditLog` entity that logs all the actions that modify entity state (i.e Add, Modify, Delete) on the `auditable` entities.
+The system maintains a complete log of all operations that alter the state of auditable entities (i.e., `Add`, `Modify`, `Delete`).
+
+    public class AuditLog
+    {
+      public string Id { get; set; } = default!;
+      public string? UserId { get; set; }
+      public DateTime EventDate { get; set; }
+      public string EventType { get; set; } = default!;
+      public string TableName { get; set; } = default!;
+      public string RecordId { get; set; } = default!;
+      public string ColumnName {  get; set; } = default!;
+      public string? OriginalValue {  get; set; }
+      public string? NewValue { get; set; }
+    }
+
 
 # Patterns Used
 
-The project follows the CQRS (Command and Query Responsibility Segregation), mediator and repository patterns.
+The solution architecture adopts the CQRS (Command and Query Responsibility Segregation) pattern, along with the mediator and repository patterns.
 
-_**CQRS pattern**_: Segregates the operations that handle write requests (commands) from operations that handle read requests (queries). 
+_**CQRS pattern**_: Separates write commands from read queries. 
 
 _**Mediator pattern**_:  Ensures that components are loosely coupled by preventing objects from explicitly referencing each other.
 
-_**Repository pattern**_: Domain-driven design pattern used to keep persistence concerns outside the domain model of the system.
+_**Repository pattern**_: Design pattern that keeps persistence concerns separate from the domain model of the system.
