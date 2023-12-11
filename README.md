@@ -2,13 +2,7 @@
 
 ## Introduction
 
-The solution offers an application for performing tax calculations. It utilizes ASP.NET Core Web API and ASP.NET Core Web App (Razor Pages). The API exposes various endpoints that can be found in the Swagger UI (i.e. `https:/localhost:5443/swagger`). For example, a request to calculate taxes would look like:
-
-    POST /services/TaxCalculations/calculate
-    {
-      "postalCode": "0042",
-      "annualIncome": 500000
-    }
+The solution offers an application for performing tax calculations. It utilizes ASP.NET Core Web API and ASP.NET Core Web App (Razor Pages).
 
 ## Table Of Contents
 
@@ -20,6 +14,7 @@ The solution offers an application for performing tax calculations. It utilizes 
   - [Prerequisites for building the project](#prerequisites-for-building-the-project)
   - [Building the solution](#building-the-solution)
   - [Running the application](#running-the-application)
+    - [API Integration](#api-integration)
 - [Architecture and Design Decisions](#architecture-and-design-decisions)
   - [The API Application](#the-api-application-taxmattersapi)
     - [The API Security](#the-api-security)  
@@ -86,9 +81,19 @@ To build and run the project, open a command prompt to the root of the solution,
 
   3. Open your favourite browser and visit `https://localhost:50443`
 
+### API Integration
+
+  The API exposes various endpoints that can be found in the Swagger UI (i.e. `https:/localhost:5443/swagger`). For example, a request to calculate tax would look like:
+
+    POST /services/TaxCalculations/calculate
+    {
+      "postalCode": "0042",
+      "annualIncome": 500000
+    }
+
   `Note:`
 
-  > To test the api only, e.g. via Postman, visit the [security section](#the-api-security) of the api.
+  > To test the API only, e.g. via Postman, visit the [security section](#the-api-security) of the API for the authentication details.
 
 # Architecture and Design Decisions
 
