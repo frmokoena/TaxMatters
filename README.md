@@ -66,7 +66,7 @@ To build and run the project, open a command prompt to the root of the solution,
    - From the API Command Prompt:     
 
         ```
-        cd ./api/
+        cd ./api
         dotnet Tax.Matters.API.dll --urls "https://localhost:5443"        
         ```
 
